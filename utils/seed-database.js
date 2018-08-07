@@ -5,13 +5,19 @@ const {DATABASE_URL} = require('../config');
 const Character = require('../models/character');
 const seedCharacters = require('../db/seed/characters');
 
+const Edge = require('../models/edge');
+const seedEdges = require('../db/seed/edges');
+
 mongoose.connect(DATABASE_URL)
   .then(() => mongoose.connection.db.dropDatabase())
   .then(() =>{
-    return Character.insertMany(seedCharacters);
+    return Promise.all([
+      Character.insertMany(seedCharacters),
+      Edge.insertMany(seedEdges)
+    ]);
   })
   .then(results =>{
-    console.info('Init db with Character');
+    console.info('Init db with Characters, Edges');
   })
   .then(() => mongoose.disconnect())
   .catch(err =>{

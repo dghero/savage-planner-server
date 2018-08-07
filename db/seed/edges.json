@@ -13,7 +13,7 @@
   {
     "name": "Fleetest-Foot",
     "req": {"xp": 20,
-          "edges": ["5b64bd1bc377b892b4c2437d"],
+          "edges": [{"edgeId": "5b64bd1bc377b892b4c2437d"}],
           "skills": [],
           "attrs": []
     },

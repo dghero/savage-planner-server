@@ -217,8 +217,15 @@ router.put('/:id', (req, res, next)=>{
   };
 
   const validFields = ['initial', 'name']; //TODO: Add advances
+  
+  validFields.forEach(field =>{
+    if(field in req.body){
+      updateObj.$set[field] = req.body[field];
+    }
+  });
 
-  console.log('req.body: ', req.body.initial.attributes.strength.val);
+  console.log(req.body);
+  console.log(updateObj);
 
   res.json();
 

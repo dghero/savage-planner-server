@@ -4,9 +4,15 @@ const edgeSchema = new mongoose.Schema({
   name: {type: String, required: true},
   req:{
     xp: {type: Number, required: true},
-    edges: [
-      { type: mongoose.Schema.Types.ObjectId, 
-      ref: 'Edge', required: true }]
+    edges: [{ 
+              edgeId: {type: mongoose.Schema.Types.ObjectId, 
+              ref: 'Edge', required: true }
+            }],
+    attributes: [{type: String}],
+    skills: [{
+      skill: {type: String}, 
+      val: {type: Number}
+    }]
   }
 
 });
@@ -14,12 +20,12 @@ const edgeSchema = new mongoose.Schema({
 
 edgeSchema.set('timestamps', true);
 
-edgeSchema.set('toObject',{
-  virtuals: true,
-  versionKey: false,
-  transform: (document, ret) =>{
-    delete ret._id;
-  }
-});
+// edgeSchema.set('toObject',{
+//   virtuals: true,
+//   versionKey: false,
+//   transform: (document, ret) =>{
+//     delete ret._id;
+//   }
+// });
 
 module.exports = mongoose.model('Edge', edgeSchema);

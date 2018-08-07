@@ -64,7 +64,14 @@ router.get('/', (req, res, next)=>{
 
   ];
 
-  res.json(edges);
+  Edge.find()
+    .then(results =>{
+      res.json(results);
+    })
+    .catch(err =>{
+      next(err);
+    });
+
 });
 
 
