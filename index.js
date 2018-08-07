@@ -8,6 +8,9 @@ const { PORT, CLIENT_ORIGIN } = require('./config');
 const { dbConnect } = require('./db-mongoose');
 // const {dbConnect} = require('./db-knex');
 
+const characterRouter = require('./routes/characters');
+const edgeRouter = require('./routes/edges');
+
 const app = express();
 
 
@@ -23,91 +26,10 @@ app.use(
   })
 );
 
-//GET all. TODO: Shove into router later
-app.get('/api/characters', (req, res, next)=>{
-  const characters = [{
-    id: '5b64b162560e648424b32a61',
-    userId: null,
-    name: 'CHARACTER MAN',
-    initial: {
-      skills: {
-        athletics:{val:8, attr: 'strength'},
-        fighting:{val:10, attr: 'agility'},
-        healing:{val:8, attr: 'smarts'},
-        intimidation:{val:4, attr: 'spirit'},
-        investigation:{val:4, attr: 'smarts'},
-        notice:{val:0, attr: 'smarts'},
-        persuasion:{val:0, attr: 'spirit'},
-        repair:{val:0, attr: 'smarts'},
-        riding:{val:0, attr: 'agility'},
-        shooting:{val:0, attr: 'agility'},
-        stealth:{val:0, attr: 'agility'},
-        streetwise:{val:0, attr: 'smarts'},
-        survival:{val:0, attr: 'smarts'},
-        taunt:{val:0, attr: 'spirit'},
-        throwing:{val:0, attr: 'agility'},
-        tracking:{val:0, attr: 'smarts'}
-      },
-      attributes: {
-        strength: 6,
-        vigor: 6,
-        agility: 6,
-        smarts: 8,
-        spirit: 4
-      }
-    },
-    advances: [
-      null
-    ]
-  }];
+app.use('/api/characters', characterRouter);
+app.use('/api/edges', edgeRouter);
 
-  res.json(characters);
-});
 
-//GET by id. TODO: Shove into router later
-app.get('/api/characters/:id', (req, res, next)=>{
-  const id = req.params.id;
-  const character = {
-    id: '5b64b162560e648424b32a61',
-    userId: null,
-    name: 'CHARACTER MAN',
-    initial: {
-      skills: {
-        athletics:{val:8, attr: 'strength'},
-        fighting:{val:10, attr: 'agility'},
-        healing:{val:8, attr: 'smarts'},
-        intimidation:{val:4, attr: 'spirit'},
-        investigation:{val:4, attr: 'smarts'},
-        notice:{val:0, attr: 'smarts'},
-        persuasion:{val:0, attr: 'spirit'},
-        repair:{val:0, attr: 'smarts'},
-        riding:{val:0, attr: 'agility'},
-        shooting:{val:0, attr: 'agility'},
-        stealth:{val:0, attr: 'agility'},
-        streetwise:{val:0, attr: 'smarts'},
-        survival:{val:0, attr: 'smarts'},
-        taunt:{val:0, attr: 'spirit'},
-        throwing:{val:0, attr: 'agility'},
-        tracking:{val:0, attr: 'smarts'}
-      },
-      attributes: {
-        strength: 6,
-        vigor: 6,
-        agility: 6,
-        smarts: 8,
-        spirit: 4
-      }
-    },
-    advances: [
-      null
-    ]
-  };
-
-  if(id === character.id)
-    res.json(character);
-  else 
-    next();
-});
 
 
 //Custom 404 not found route
