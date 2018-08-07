@@ -1,7 +1,7 @@
 const express = require('express');
 
 //Schema models
-//TODO: Add
+const Character = require('../models/character');
 
 //Init router
 const router = express.Router();
@@ -16,13 +16,13 @@ const character = {
       athletics:{val:8, attr: 'strength'},
       fighting:{val:10, attr: 'agility'},
       healing:{val:8, attr: 'smarts'},
-      intimidation:{val:4, attr: 'spirit'},
-      investigation:{val:4, attr: 'smarts'},
+      intimidation:{val:0, attr: 'spirit'},
+      investigation:{val:0, attr: 'smarts'},
       notice:{val:0, attr: 'smarts'},
       persuasion:{val:0, attr: 'spirit'},
       repair:{val:0, attr: 'smarts'},
-      riding:{val:0, attr: 'agility'},
-      shooting:{val:0, attr: 'agility'},
+      riding:{val:4, attr: 'agility'},
+      shooting:{val:4, attr: 'agility'},
       stealth:{val:0, attr: 'agility'},
       streetwise:{val:0, attr: 'smarts'},
       survival:{val:0, attr: 'smarts'},
@@ -41,102 +41,187 @@ const character = {
   advances: [
     {
       xp: 5,
-      type: 'edge',
-      val: '5b64bd1bc377b892b4c2437d'
-        // { 
-        //   id: '5b64bd1bc377b892b4c2437d',
-        //   name: 'Fleet-Foot',
-        //   req: {xp: 0,
-        //         edges: [],
-        //         skills: [],
-        //         attrs: [{attr: 'agility', val: 6}]
-        //   },
-        //   description: 'The hero\'s Pace is increased by +2 and he rolls a d10 instead of a d6 when running.'
-        // }
+      advType: 'edge',
+      edgeId: '5b64bd1bc377b892b4c2437d'
     },
     {
       xp: 10,
-      type: 'attr',
+      advType: 'attr',
       val: 'spirit'
     },
     {
       xp: 15,
-      type: 'newskill',
+      advType: 'newskill',
       val: 'repair'
     },
     {
       xp: 20,
-      type: '1skill',
-      val: 'fighting'
+      advType: '1skill',
+      val: 'repair'
     },
     {
       xp: 25,
-      type: '2skills',
-      val: {val1: 'investigation',
-            val2: 'intimidation'}
+      advType: '2skills',
+      val: 'riding',
+      val2: 'shooting'
     },
     {
       xp: 30,
-      type: 'none'
+      advType: 'none'
     },
     {
       xp: 35,
-      type: 'none'
+      advType: 'none'
     },
     {
       xp: 40,
-      type: 'none'
+      advType: 'none'
     },
     {
       xp: 45,
-      type: 'none'
+      advType: 'none'
     },
     {
       xp: 50,
-      type: 'none'
+      advType: 'none'
     },
     {
       xp: 55,
-      type: 'none'
+      advType: 'none'
     },
     {
       xp: 60,
-      type: 'none'
+      advType: 'none'
     },
     {
       xp: 65,
-      type: 'none'
+      advType: 'none'
     },
     {
       xp: 70,
-      type: 'none'
+      advType: 'none'
     },
     {
       xp: 75,
-      type: 'none'
+      advType: 'none'
     },
     {
       xp: 80,
-      type: 'none'
+      advType: 'none'
     }
   ]
 };
 
-//GET all. TODO: Shove into router later
+//GET all
 router.get('/', (req, res, next)=>{
-  const characters = [character];
-
-  res.json(characters);
+  
+  Character.find()
+    .then(results =>{
+      res.json(results);
+    })
+    .catch(err =>{
+      next(err);
+    });
 });
 
-//GET by id. TODO: Shove into router later
+//GET by id
 router.get('/:id', (req, res, next)=>{
   const id = req.params.id;
 
-  if(id === character.id)
-    res.status(200).json(character);
-  else 
-    next();
+  //TODO: find by id later
+  Character.findOne({_id: id})
+    .then(results =>{
+      if(results) res.json(results);
+      else next();
+    })
+    .catch(err =>{
+      next(err);
+    });
+});
+
+//PUT update by id
+router.put('/:id', (req, res, next)=>{
+  const id = req.params.id;
+  const updateObj ={
+    $set: {}
+  };
+
+  const dummyChar = {
+    id: '5b64b162560e648424b32a61',
+    userId: null,
+    name: 'CHARACTER MAN',
+    initial: {
+      skills: {
+        athletics:{val:8, attr: 'strength'},
+        fighting:{val:10, attr: 'agility'},
+        healing:{val:8, attr: 'smarts'},
+        intimidation:{val:0, attr: 'spirit'},
+        investigation:{val:0, attr: 'smarts'},
+        notice:{val:0, attr: 'smarts'},
+        persuasion:{val:0, attr: 'spirit'},
+        repair:{val:0, attr: 'smarts'},
+        riding:{val:4, attr: 'agility'},
+        shooting:{val:4, attr: 'agility'},
+        stealth:{val:0, attr: 'agility'},
+        streetwise:{val:0, attr: 'smarts'},
+        survival:{val:0, attr: 'smarts'},
+        taunt:{val:0, attr: 'spirit'},
+        throwing:{val:0, attr: 'agility'},
+        tracking:{val:0, attr: 'smarts'}
+      },
+      attributes: {
+        strength: 6,
+        agility: 6,
+        vigor: 6,
+        smarts: 8,
+        spirit: 4
+      }
+    },
+    advances: [
+      {
+        xp: 5,
+        advType: 'edge',
+        edgeId: '5b64bd1bc377b892b4c2437d'
+      },
+      {
+        xp: 10,
+        advType: 'attr',
+        val: 'spirit'
+      },
+      {
+        xp: 15,
+        advType: 'newskill',
+        val: 'repair'
+      },
+      {
+        xp: 20,
+        advType: '1skill',
+        val: 'repair'
+      },
+      {
+        xp: 25,
+        advType: '2skills',
+        val: 'riding',
+        val2: 'shooting'
+      },
+      {
+        xp: 30,
+        advType: 'none'
+      },
+      // ...
+      {
+        xp: 80,
+        advType: 'none'
+      }
+    ]
+  };
+
+  const validFields = ['initial', 'name']; //TODO: Add advances
+
+  console.log('req.body: ', req.body.initial.attributes.strength.val);
+
+  res.json();
+
 });
 
 module.exports = router;

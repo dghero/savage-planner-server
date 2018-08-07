@@ -1,7 +1,7 @@
 const express = require('express');
 
 //Schema models
-//ADD ME
+const Edge = require('../models/edge');
 
 const router = express.Router();
 

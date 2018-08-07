@@ -20,6 +20,9 @@ app.use(
   })
 );
 
+// Parse request body
+app.use(express.json());
+
 app.use(
   cors({
     origin: CLIENT_ORIGIN
