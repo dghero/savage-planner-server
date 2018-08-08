@@ -2,6 +2,7 @@ const express = require('express');
 
 //Schema models
 const Character = require('../models/character');
+const Edge = require('../models/edge');
 
 //Init router
 const router = express.Router();
@@ -23,6 +24,14 @@ const skillKeys = [
   'taunt',
   'throwing',
   'tracking'];
+
+const advanceKeys=[
+  'xp',
+  'advType',
+  'val',
+  'val2',
+  'edgeId'
+];
 
 const attrKeys =[
   'strength',
@@ -170,9 +179,9 @@ router.put('/:id', (req, res, next)=>{
   const id = req.params.id;
   const updateObj ={$set: {}};
   let hasVal = false;
-
-  //We only want to update one thing at a time, hence the else-if chains
+  
   if(req.body.hasOwnProperty('initial')){
+    //Fetch attribute to set
     if(req.body.initial.hasOwnProperty('attributes') 
           && Object.keys(req.body.initial.attributes).length > 0){
 
@@ -183,24 +192,34 @@ router.put('/:id', (req, res, next)=>{
                         req.body.initial.attributes[key];
         }
       });
-    } else if(req.body.initial.hasOwnProperty('skills')
+    }
+    //Fetch skill to set
+    if(req.body.initial.hasOwnProperty('skills')
           && Object.keys(req.body.initial.skills).length > 0){
         
       skillKeys.forEach(key =>{
-        if(req.body.initial.skills.hasOwnProprety(key)){
+        if(req.body.initial.skills.hasOwnProperty(key)){
           hasVal = true;
-          updateObj.$set[`initial.skills.${key}`] = 
-                        req.body.initial.skills[key];
+          updateObj.$set[`initial.skills.${key}.val`] = 
+                        req.body.initial.skills[key].val;
         }
       });
     }
-  }else if(req.body.hasOwnProperty('advances')){
+  }
+
+  if(req.body.hasOwnProperty('advance')){
     //hasVal = true;
-    console.log('advances');
+    const updateAdvKeys = Object.keys(req.body.advance);
+    if( updateAdvKeys.sort().join(',') !== (advanceKeys.sort()).join(',') ){
+      const err = new Error('Missing or unknown key in `advance`');
+      err.status = 500;
+      return next(err);
+    }
+    hasVal = true;
+    const xpIndex = req.body.advance.xp/5 - 1;
+    updateObj.$set[`advances.${xpIndex}`] = req.body.advance;
   }
   
-
-
   //Nothing to update, don't do it
   if(!hasVal){
     const err = new Error('No valid update fields in request body');
@@ -213,25 +232,11 @@ router.put('/:id', (req, res, next)=>{
   //TODO: Validate any starting skill/attribute numbers belong to 0, 4, 6, 8, 10, 12
 
   //TODO: Anything with edges
-
-
+  
   console.log('req.body: ', req.body);
   console.log('final updateObj: ', updateObj);
-  // console.log('updateObj.initial.attributes:', updateObj.initial.attributes);
 
-  // const query = {_id: id};
   const options = {new: true};
-
-  // Character.findById(id)
-  //   .then(results =>{
-  //     return results._doc;
-  //   })
-  //   .then(results =>{
-  //     console.log('findById results: ',results);
-  //     const finalUpdateObj = Object.assign({}, results, updateObj);
-  //     console.log('finalUpdateObj: ', finalUpdateObj);
-  //     return Character.findByIdAndUpdate(id, finalUpdateObj, options);
-  //   })
 
   Character.findByIdAndUpdate(id, updateObj, options)
     .then(results =>{
