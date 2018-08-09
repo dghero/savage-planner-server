@@ -151,6 +151,7 @@ const character = {
 router.get('/', (req, res, next)=>{
   
   Character.find()
+   .populate('advances.edgeId')
     .then(results =>{
       res.json(results);
     })
@@ -165,6 +166,7 @@ router.get('/:id', (req, res, next)=>{
 
   //TODO: find by id later
   Character.findOne({_id: id})
+    .populate('advances.edgeId')
     .then(results =>{
       if(results) res.json(results);
       else next();

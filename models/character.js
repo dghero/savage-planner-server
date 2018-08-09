@@ -70,9 +70,9 @@ const characterSchema = new mongoose.Schema({
       advType: {type: String, required: true},
       val: {type: String},
       val2: {type: String},
-      edgeId: {type: String}
-      // edgeId: {type: mongoose.Schema.Types.ObjectId,
-      //         ref: 'Edge'}
+      // edgeId: {type: String}
+      edgeId: {type: mongoose.Schema.Types.ObjectId,
+              ref: 'Edge'}
     }
   ]
 });
