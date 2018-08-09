@@ -234,9 +234,6 @@ router.put('/:id', (req, res, next)=>{
   //TODO: Validate any starting skill/attribute numbers belong to 0, 4, 6, 8, 10, 12
 
   //TODO: Anything with edges
-  
-  console.log('req.body: ', req.body);
-  console.log('final updateObj: ', updateObj);
 
   const options = {new: true};
 
