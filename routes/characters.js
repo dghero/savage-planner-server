@@ -238,6 +238,7 @@ router.put('/:id', (req, res, next)=>{
   const options = {new: true};
 
   Character.findByIdAndUpdate(id, updateObj, options)
+    .populate('advances.edgeId')
     .then(results =>{
       if(results) res.json(results);
       else next();
