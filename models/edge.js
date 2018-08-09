@@ -20,12 +20,12 @@ const edgeSchema = new mongoose.Schema({
 
 edgeSchema.set('timestamps', true);
 
-// edgeSchema.set('toObject',{
-//   virtuals: true,
-//   versionKey: false,
-//   transform: (document, ret) =>{
-//     delete ret._id;
-//   }
-// });
+edgeSchema.set('toObject',{
+  virtuals: true,
+  versionKey: false,
+  transform: (document, ret) =>{
+    delete ret._id;
+  }
+});
 
 module.exports = mongoose.model('Edge', edgeSchema);
