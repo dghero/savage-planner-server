@@ -38,17 +38,17 @@
     {
       "xp": 10,
       "advType": "attr",
-      "val": "spirit"
+      "val": "vigor"
     },
     {
       "xp": 15,
       "advType": "newskill",
-      "val": "repair"
+      "val": "intimidation"
     },
     {
       "xp": 20,
       "advType": "1skill",
-      "val": "repair"
+      "val": "intimidation"
     },
     {
       "xp": 25,
