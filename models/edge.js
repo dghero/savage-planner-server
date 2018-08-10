@@ -8,7 +8,10 @@ const edgeSchema = new mongoose.Schema({
               edgeId: {type: mongoose.Schema.Types.ObjectId, 
               ref: 'Edge', required: true }
             }],
-    attributes: [{type: String}],
+    attrs: [{
+      attr: {type: String},
+      val: {type: Number}
+    }],
     skills: [{
       skill: {type: String}, 
       val: {type: Number}
