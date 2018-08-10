@@ -65,6 +65,7 @@ router.get('/', (req, res, next)=>{
   ];
 
   Edge.find()
+    .sort('name')
     .then(results =>{
       res.json(results);
     })
