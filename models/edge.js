@@ -16,7 +16,8 @@ const edgeSchema = new mongoose.Schema({
       skill: {type: String}, 
       val: {type: Number}
     }]
-  }
+  },
+  description: {type: String, required: true}
 
 });
 
