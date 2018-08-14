@@ -41,112 +41,6 @@ const attrKeys =[
   'spirit'
 ];
 
-//dummy data 
-const character = {
-  id: '5b64b162560e648424b32a61',
-  userId: null,
-  name: 'CHARACTER MAN',
-  initial: {
-    skills: {
-      athletics:{val:8, attr: 'strength'},
-      fighting:{val:10, attr: 'agility'},
-      healing:{val:8, attr: 'smarts'},
-      intimidation:{val:0, attr: 'spirit'},
-      investigation:{val:0, attr: 'smarts'},
-      notice:{val:0, attr: 'smarts'},
-      persuasion:{val:0, attr: 'spirit'},
-      repair:{val:0, attr: 'smarts'},
-      riding:{val:4, attr: 'agility'},
-      shooting:{val:4, attr: 'agility'},
-      stealth:{val:0, attr: 'agility'},
-      streetwise:{val:0, attr: 'smarts'},
-      survival:{val:0, attr: 'smarts'},
-      taunt:{val:0, attr: 'spirit'},
-      throwing:{val:0, attr: 'agility'},
-      tracking:{val:0, attr: 'smarts'}
-    },
-    attributes: {
-      strength: 6,
-      agility: 6,
-      vigor: 6,
-      smarts: 8,
-      spirit: 4
-    }
-  },
-  advances: [
-    {
-      xp: 5,
-      advType: 'edge',
-      edgeId: '5b64bd1bc377b892b4c2437d'
-    },
-    {
-      xp: 10,
-      advType: 'attr',
-      val: 'spirit'
-    },
-    {
-      xp: 15,
-      advType: 'newskill',
-      val: 'repair'
-    },
-    {
-      xp: 20,
-      advType: '1skill',
-      val: 'repair'
-    },
-    {
-      xp: 25,
-      advType: '2skills',
-      val: 'riding',
-      val2: 'shooting'
-    },
-    {
-      xp: 30,
-      advType: 'none'
-    },
-    {
-      xp: 35,
-      advType: 'none'
-    },
-    {
-      xp: 40,
-      advType: 'none'
-    },
-    {
-      xp: 45,
-      advType: 'none'
-    },
-    {
-      xp: 50,
-      advType: 'none'
-    },
-    {
-      xp: 55,
-      advType: 'none'
-    },
-    {
-      xp: 60,
-      advType: 'none'
-    },
-    {
-      xp: 65,
-      advType: 'none'
-    },
-    {
-      xp: 70,
-      advType: 'none'
-    },
-    {
-      xp: 75,
-      advType: 'none'
-    },
-    {
-      xp: 80,
-      advType: 'none'
-    }
-  ]
-};
-
 //GET all
 router.get('/', (req, res, next)=>{
   
@@ -180,6 +74,11 @@ router.put('/:id', (req, res, next)=>{
   const id = req.params.id;
   const updateObj ={$set: {}};
   let hasVal = false;
+
+  if(req.body.hasOwnProperty('name')){
+    hasVal=true;
+    updateObj.$set['name'] = req.body.name;
+  }
   
   if(req.body.hasOwnProperty('initial')){
     //Fetch attribute to set
