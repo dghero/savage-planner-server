@@ -1,4 +1,5 @@
 const express = require('express');
+const ObjectId = require('mongoose').Types.ObjectId;
 
 //Schema models
 const Character = require('../models/character');
@@ -75,8 +76,11 @@ router.get('/:id', (req, res, next)=>{
 router.post('/', (req, res, next)=>{
   
   //TODO: ASSIGN USERID
+  const createChar = Object.assign({}, newChar);
 
-  Character.create(newChar)
+  createChar.userId = null;
+
+  Character.create(createChar)
     .then(results =>{
       res.location(`${req.originalUrl}/${results.id}`).status(201).json(results);
     })
@@ -161,5 +165,32 @@ router.put('/:id', (req, res, next)=>{
       next(err);
     });
 });
+
+router.delete('/:id', (req, res, next) => {
+
+  const id = req.params.id;
+  // const userId = req.user.id;
+
+  if (!ObjectId.isValid(id)) {
+    const err = new Error('The `id` is not valid');
+    err.status = 400;
+    return next(err);
+  }
+
+  const query = {_id: id};
+  // const query = {_id: id, userId};
+
+  Character.findOneAndRemove(query)
+    .then(results =>{
+      if(results)
+        res.status(204).end();
+      else
+        next();
+    })
+    .catch(err =>{
+      next(err);
+    });
+});
+
 
 module.exports = router;
