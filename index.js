@@ -1,5 +1,3 @@
-'use strict';
-
 const express = require('express');
 const cors = require('cors');
 const morgan = require('morgan');
@@ -8,11 +6,19 @@ const { PORT, CLIENT_ORIGIN } = require('./config');
 const { dbConnect } = require('./db-mongoose');
 // const {dbConnect} = require('./db-knex');
 
+//get auth
+const passport = require('passport');
+const localStrategy = require('./passport/local');
+const jwtStrategy = require('./passport/jwt');
+
+//get routers
 const characterRouter = require('./routes/characters');
 const edgeRouter = require('./routes/edges');
+const userRouter = require('./routes/users');
+const authRouter = require('./routes/auth');
+
 
 const app = express();
-
 
 app.use(
   morgan(process.env.NODE_ENV === 'production' ? 'common' : 'dev', {
@@ -29,10 +35,17 @@ app.use(
   })
 );
 
+//Utilize local strategy for login
+passport.use(localStrategy);
+
+//Utilize JWS strategy for login
+passport.use(jwtStrategy);
+
+//mount routers
 app.use('/api/characters', characterRouter);
 app.use('/api/edges', edgeRouter);
-
-
+app.use('/api/users', userRouter);
+app.use('/api/login', authRouter);
 
 
 //Custom 404 not found route

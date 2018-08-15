@@ -1,9 +1,9 @@
 const mongoose = require('mongoose');
 
 const characterSchema = new mongoose.Schema({
-  userId: {type: String}, //T
-  //userId: { type: mongoose.Schema.Types.ObjectId, 
-  //          ref: 'User'}// required: true },
+  // userId: {type: String}, //T
+  userId: { type: mongoose.Schema.Types.ObjectId, 
+           ref: 'User', required: true },
   name: {type: String},
   initial: {
     skills:{

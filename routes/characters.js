@@ -5,6 +5,9 @@ const ObjectId = require('mongoose').Types.ObjectId;
 const Character = require('../models/character');
 const Edge = require('../models/edge');
 
+//Get passport for auth
+const passport = require('passport');
+
 //Init router
 const router = express.Router();
 
@@ -44,10 +47,16 @@ const attrKeys =[
   'spirit'
 ];
 
+//Authenticate
+router.use('/', passport.authenticate('jwt', { session: false, failWithError: true }));
+
 //GET all
 router.get('/', (req, res, next)=>{
-  
-  Character.find()
+  const userId = req.user.id;
+  const filter = {userId};
+
+
+  Character.find(filter)
     .populate('advances.edgeId')
     .then(results =>{
       res.json(results);
@@ -60,8 +69,11 @@ router.get('/', (req, res, next)=>{
 //GET by id
 router.get('/:id', (req, res, next)=>{
   const id = req.params.id;
+  const userId = req.user.id;
+
+  let filter = {_id: id, userId};
   
-  Character.findOne({_id: id})
+  Character.findOne(filter)
     .populate('advances.edgeId')
     .then(results =>{
       if(results) res.json(results);
@@ -74,11 +86,10 @@ router.get('/:id', (req, res, next)=>{
 
 //POST new character w/ empty stats
 router.post('/', (req, res, next)=>{
-  
-  //TODO: ASSIGN USERID
-  const createChar = Object.assign({}, newChar);
+  const userId = req.user.id;
 
-  createChar.userId = null;
+  const createChar = Object.assign({}, newChar);
+  createChar.userId = userId;
 
   Character.create(createChar)
     .then(results =>{
@@ -92,6 +103,8 @@ router.post('/', (req, res, next)=>{
 //PUT update by id
 router.put('/:id', (req, res, next)=>{
   const id = req.params.id;
+  const userId = req.user.id;
+
   const updateObj ={$set: {}};
   let hasVal = false;
 
@@ -155,7 +168,9 @@ router.put('/:id', (req, res, next)=>{
 
   const options = {new: true};
 
-  Character.findByIdAndUpdate(id, updateObj, options)
+  const filter ={_id: id, userId};
+
+  Character.findOneAndUpdate(filter, updateObj, options)
     .populate('advances.edgeId')
     .then(results =>{
       if(results) res.json(results);
@@ -169,7 +184,7 @@ router.put('/:id', (req, res, next)=>{
 router.delete('/:id', (req, res, next) => {
 
   const id = req.params.id;
-  // const userId = req.user.id;
+  const userId = req.user.id;
 
   if (!ObjectId.isValid(id)) {
     const err = new Error('The `id` is not valid');
@@ -177,8 +192,7 @@ router.delete('/:id', (req, res, next) => {
     return next(err);
   }
 
-  const query = {_id: id};
-  // const query = {_id: id, userId};
+  const query = {_id: id, userId};
 
   Character.findOneAndRemove(query)
     .then(results =>{
