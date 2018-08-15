@@ -7,6 +7,8 @@ const Edge = require('../models/edge');
 //Init router
 const router = express.Router();
 
+const newChar = require('../db/seed/newChar.json');
+
 const skillKeys = [
   'athletics',
   'fighting',
@@ -63,6 +65,20 @@ router.get('/:id', (req, res, next)=>{
     .then(results =>{
       if(results) res.json(results);
       else next();
+    })
+    .catch(err =>{
+      next(err);
+    });
+});
+
+//POST new character w/ empty stats
+router.post('/', (req, res, next)=>{
+  
+  //TODO: ASSIGN USERID
+
+  Character.create(newChar)
+    .then(results =>{
+      res.location(`${req.originalUrl}/${results.id}`).status(201).json(results);
     })
     .catch(err =>{
       next(err);
