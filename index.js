@@ -45,7 +45,7 @@ passport.use(jwtStrategy);
 app.use('/api/characters', characterRouter);
 app.use('/api/edges', edgeRouter);
 app.use('/api/users', userRouter);
-app.use('/api/login', authRouter);
+app.use('/api/auth', authRouter);
 
 
 //Custom 404 not found route
